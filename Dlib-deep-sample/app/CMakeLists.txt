@@ -2,9 +2,10 @@ cmake_minimum_required(VERSION 3.4.1)
 SET(OpenCV_FOUND true )
 FIND_PACKAGE(OpenCV REQUIRED)
 ADD_SUBDIRECTORY(${dlib_DIR} ${CMAKE_CURRENT_BINARY_DIR}/dlib)
-FILE(GLOB PROJECT_SRCS
-        "*.h"
-        "*.cpp")
+SET(PROJECT_SRCS
+         src/main/cpp/native-lib.h
+         src/main/cpp/native-lib.cpp
+         src/main/cpp/fps.h)
 add_library( # Sets the name of the library.
              native-lib
              SHARED

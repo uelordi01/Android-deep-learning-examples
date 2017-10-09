@@ -4,7 +4,6 @@
 //#include <opencv2/core.hpp>
 #include "opencv2/opencv.hpp"
 #include "fps.h"
-
 //OpenCV includes:
 Fps *fpsCounter;
 JNIEXPORT void JNICALL
