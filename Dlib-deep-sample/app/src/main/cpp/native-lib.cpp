@@ -6,13 +6,19 @@
 #include "fps.h"
 //OpenCV includes:
 Fps *fpsCounter;
+#include <dlib/dnn.h>
+#include <dlib/gui_widgets.h>
+#include <dlib/clustering.h>
+#include <dlib/string.h>
+#include <dlib/image_io.h>
+#include <dlib/image_processing/frontal_face_detector.h>
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_init(JNIEnv *env, jclass type) {
+Java_org_uelordi_deepsamples_dlib_JniManager_init(JNIEnv *env, jclass type) {
 
     // TODO
 }
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_process(JNIEnv *env, jclass type, jlong colorImage,
+Java_org_uelordi_deepsamples_dlib_JniManager_process(JNIEnv *env, jclass type, jlong colorImage,
                                                        jlong greyImage) {
 
     // TODO
@@ -25,7 +31,7 @@ Java_org_opencv_samples_captureonly_JniManager_process(JNIEnv *env, jclass type,
 }
 
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_start(JNIEnv *env, jclass type) {
+Java_org_uelordi_deepsamples_dlib_JniManager_start(JNIEnv *env, jclass type) {
 
     // TODO
     fpsCounter = new Fps();
@@ -34,7 +40,7 @@ Java_org_opencv_samples_captureonly_JniManager_start(JNIEnv *env, jclass type) {
 }
 
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_stop(JNIEnv *env, jclass type) {
+Java_org_uelordi_deepsamples_dlib_JniManager_stop(JNIEnv *env, jclass type) {
 
     // TODO
 

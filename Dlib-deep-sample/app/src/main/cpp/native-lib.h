@@ -8,17 +8,18 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+;
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_init(JNIEnv *env, jclass type);
+Java_org_uelordi_deepsamples_dlib_JniManager_init(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_process(JNIEnv *env, jclass type, jlong colorImage,
+Java_org_uelordi_deepsamples_dlib_JniManager_process(JNIEnv *env, jclass type, jlong colorImage,
                                                        jlong greyImage);
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_start(JNIEnv *env, jclass type);
+Java_org_uelordi_deepsamples_dlib_JniManager_start(JNIEnv *env, jclass type);
 
 JNIEXPORT void JNICALL
-Java_org_opencv_samples_captureonly_JniManager_stop(JNIEnv *env, jclass type);
+Java_org_uelordi_deepsamples_dlib_JniManager_stop(JNIEnv *env, jclass type);
 
 #ifdef __cplusplus
 }
