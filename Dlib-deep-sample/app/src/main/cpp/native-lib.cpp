@@ -1,47 +1,60 @@
 
 #include <string>
 #include "native-lib.h"
-//#include <opencv2/core.hpp>
 #include "opencv2/opencv.hpp"
 #include "fps.h"
+#include "DeepFaceDetection.h"
 //OpenCV includes:
 Fps *fpsCounter;
-#include <dlib/dnn.h>
-#include <dlib/gui_widgets.h>
-#include <dlib/clustering.h>
-#include <dlib/string.h>
-#include <dlib/image_io.h>
-#include <dlib/image_processing/frontal_face_detector.h>
+DeepFaceDetection *m_net;
 JNIEXPORT void JNICALL
-Java_org_uelordi_deepsamples_dlib_JniManager_init(JNIEnv *env, jclass type) {
+Java_org_uelordi_deepsamples_dlib_JniManager_init(JNIEnv *env, jclass type,
+                                                  jstring neuralNet_,
+                                                  jstring weights_filename_) {
+    const char *netFile = env->GetStringUTFChars(neuralNet_, 0);
+    const char *weightsFile = env->GetStringUTFChars(weights_filename_, 0);
 
-    // TODO
+        m_net = new DeepFaceDetection();
+        m_net->init(netFile, weightsFile);
 }
 JNIEXPORT void JNICALL
 Java_org_uelordi_deepsamples_dlib_JniManager_process(JNIEnv *env, jclass type, jlong colorImage,
                                                        jlong greyImage) {
 
-    // TODO
-    cv::Mat  &inMat =*(cv::Mat *) colorImage;
+
+    cv::Mat  &colorMat =*(cv::Mat *) colorImage;
+    cv::Mat  &greyMat =*(cv::Mat *) greyImage;
+
+    /*
+     * make Processing
+     */
+
+    /*
+     * check the fps:
+     */
     float fps = fpsCounter->checkFps();
-    std::stringstream ss;
-    ss.precision(4);
-    ss << "FPS "<< fps;
-    cv::putText(inMat,ss.str().c_str(), cv::Point(15,15),  CV_FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0,255,0));
+    cv::putText(colorMat,
+                fpsCounter->getFpsText().c_str(),
+                cv::Point(15,15),
+                CV_FONT_HERSHEY_SIMPLEX,
+                0.5,
+                cv::Scalar(0,255,0));
+    /*
+     * finish chek fps:
+     */
 }
 
 JNIEXPORT void JNICALL
 Java_org_uelordi_deepsamples_dlib_JniManager_start(JNIEnv *env, jclass type) {
 
-    // TODO
+    // TODO define the starting variables to process
     fpsCounter = new Fps();
     fpsCounter->start();
-
 }
 
 JNIEXPORT void JNICALL
 Java_org_uelordi_deepsamples_dlib_JniManager_stop(JNIEnv *env, jclass type) {
 
-    // TODO
-
+    // TODO delete every object when you finished
+    delete(m_net);
 }

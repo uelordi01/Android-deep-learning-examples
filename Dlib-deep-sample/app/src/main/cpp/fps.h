@@ -32,6 +32,13 @@ public:
          time_start = time_end;
         return mCurrentFps;
     }
+    std::string getFpsText() {
+        double fps = checkFps();
+        std::stringstream ss;
+        ss.precision(4);
+        ss << "FPS "<< fps;
+        return ss.str();
+    }
     void end() {
 
     }

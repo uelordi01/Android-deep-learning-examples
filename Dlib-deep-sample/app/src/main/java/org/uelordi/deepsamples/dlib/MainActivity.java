@@ -47,7 +47,12 @@ public class MainActivity extends AppCompatActivity implements org.opencv.androi
         setContentView(R.layout.activity_main);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         askPermissions();
-        JniManager.init();
+
+        String neuralFilePath = WritePrivateStorage
+                                .writeFileToPrivateStorage(getApplicationContext(),
+                                                            R.raw.mmod_human_face_detector,
+                                                            "mmod_human_face_detector.dat");
+        JniManager.init(neuralFilePath, "foo");
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera_surface);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
         mOpenCvCameraView.setMaxFrameSize(640, 480);

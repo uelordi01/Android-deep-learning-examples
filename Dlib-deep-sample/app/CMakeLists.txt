@@ -6,7 +6,10 @@ ADD_SUBDIRECTORY(${dlib_DIR} ${CMAKE_CURRENT_BINARY_DIR}/dlib)
 SET(PROJECT_SRCS
          src/main/cpp/native-lib.h
          src/main/cpp/native-lib.cpp
-         src/main/cpp/fps.h)
+         src/main/cpp/fps.h
+         src/main/cpp/DeepFaceDetection.h
+         src/main/cpp/DeepFaceDetection.cpp)
+
 add_library( # Sets the name of the library.
              native-lib
              SHARED
