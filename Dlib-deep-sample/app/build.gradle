@@ -14,11 +14,11 @@ android {
             cmake {
                 arguments "-DOpenCV_DIR=" + getOpenCVDir().toString()+"/sdk/native/jni",
                         "-Ddlib_DIR=" +getDlibDir().toString()+"/dlib",
-                        "-DANDROID_NATIVE_API_LEVEL=23",
-                        "-DANDROID_STL=gnustl_shared",
-                        "-DANDROID_ARM_NEON=TRUE"
-                cppFlags "-std=c++11 -frtti -fexceptions"
-                abiFilters  'armeabi-v7a' , 'arm64-v8a'
+                        "-DANDROID_NATIVE_API_LEVEL=21"
+//                        "-DANDROID_ARM_NEON=TRUE,"
+//
+                cppFlags "-std=c++11"
+                abiFilters  'armeabi-v7a' // , 'arm64-v8a'
             }
         }
     }

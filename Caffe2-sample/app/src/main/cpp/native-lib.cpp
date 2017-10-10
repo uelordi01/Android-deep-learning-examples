@@ -1,7 +1,11 @@
 #include "native-lib.h"
 #include "fps.h"
-
-
+#include <dlib/dnn.h>
+#include <dlib/gui_widgets.h>
+#include <dlib/clustering.h>
+#include <dlib/string.h>
+#include <dlib/image_io.h>
+#include <dlib/image_processing/frontal_face_detector.h>
 #define CAFFE2_USE_LITE_PROTO 1
 #include <caffe2/core/predictor.h>
 #include <caffe2/core/operator.h>

@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.4.1)
 SET(OpenCV_FOUND true )
 FIND_PACKAGE(OpenCV REQUIRED)
+# ADD_SUBDIRECTORY(${OpenCV_DIR} ${CMAKE_CURRENT_BINARY_DIR}/opencv)
 ADD_SUBDIRECTORY(${dlib_DIR} ${CMAKE_CURRENT_BINARY_DIR}/dlib)
 SET(PROJECT_SRCS
          src/main/cpp/native-lib.h
