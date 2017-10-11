@@ -4,20 +4,26 @@
 
 #ifndef DLIB_DEEP_SAMPLE_DEEPFACEDETECTION_H
 #define DLIB_DEEP_SAMPLE_DEEPFACEDETECTION_H
-#include <string>
+
 #include <dlib/opencv.h>
 #include <opencv2/opencv.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+
+#include <iostream>
 #include <dlib/dnn.h>
 #include <dlib/data_io.h>
 #include <dlib/image_processing.h>
+#include <dlib/gui_widgets.h>
 
 class DeepFaceDetection {
 public:
     bool init(std::string deepNetFile, std::string weightsFile);
-    void process(const cv::Mat & in);
+    int process(const cv::Mat & in, std::vector<cv::Rect> *faces);
+    void drawFaces(cv::Mat *inOut, std::vector<cv::Rect> faces);
 private:
-
+    // TODO put the apply CLAHE function in the sources
+    void applyCLAHE(const cv::Mat &src, cv::Mat *dst);
     // Detection network structure
     template <long num_filters, typename SUBNET> using con5d =
     dlib::con<num_filters, 5, 5, 2, 2, SUBNET>;
@@ -37,6 +43,12 @@ private:
 
     det_net m_detModel;
     dlib::matrix<dlib::rgb_pixel> m_res;
+    cv::Ptr<cv::CLAHE> m_clahe;
+    std::vector<cv::Mat> m_imageChannels;
+    cv::Mat clahe_img1;
+    cv::Mat clahe_img2;
+
+
 };
 
 

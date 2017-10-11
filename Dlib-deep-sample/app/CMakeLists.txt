@@ -8,7 +8,8 @@ SET(PROJECT_SRCS
          src/main/cpp/native-lib.cpp
          src/main/cpp/fps.h
          src/main/cpp/DeepFaceDetection.h
-         src/main/cpp/DeepFaceDetection.cpp)
+         src/main/cpp/DeepFaceDetection.cpp
+         src/main/cpp/logger.h)
 
 add_library( # Sets the name of the library.
              native-lib

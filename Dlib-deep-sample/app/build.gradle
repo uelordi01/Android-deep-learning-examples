@@ -14,7 +14,14 @@ android {
             cmake {
                 arguments "-DOpenCV_DIR=" + getOpenCVDir().toString()+"/sdk/native/jni",
                         "-Ddlib_DIR=" +getDlibDir().toString()+"/dlib",
-                        "-DANDROID_NATIVE_API_LEVEL=21"
+                        "-DANDROID_NATIVE_API_LEVEL=21",
+                        "-DANDROID_CPP_FEATURES=rtti exceptions",
+                        "-DANDROID_STL=gnustl_static",
+                        "-DDLIB_NO_GUI_SUPPORT=ON",
+                        "-DDLIB_JPEG_SUPPORT=OFF",
+                        "-DDLIB_PNG_SUPPORT=OFF",
+                        "-DDLIB_LINK_WITH_SQLITE3=OFF"
+//                        "-DDLIB_ENABLE_ASSERTS=ON"
 //                        "-DANDROID_ARM_NEON=TRUE,"
 //
                 cppFlags "-std=c++11"
