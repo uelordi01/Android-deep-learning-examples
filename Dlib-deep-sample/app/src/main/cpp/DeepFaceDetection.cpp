@@ -13,7 +13,6 @@ bool DeepFaceDetection::init(std::string deepNetFile, std::string weightsFile) {
     m_clahe->setClipLimit(4);
     return false;
 }
-g
 int DeepFaceDetection::process(const cv::Mat &  in, std::vector<cv::Rect> *faces) {
 
     cv::Mat processImg;

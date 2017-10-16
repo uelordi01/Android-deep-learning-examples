@@ -11,10 +11,11 @@ Fps *fpsCounter;
 DeepFaceDetection *m_net;
 bool mIsTheThreadStart;
 cv::Mat shared_camera_image;
+
 std::thread * workerThread;
 std::mutex mCameraMutex;
-std::unique_lock<std::mutex> lock(mCameraMutex);
 std::condition_variable mCameraCondition;
+bool m_isNewFrameSet = false;
 void process ();
 JNIEXPORT void JNICALL
 Java_org_uelordi_deepsamples_dlib_JniManager_init(JNIEnv *env, jclass type,
@@ -37,10 +38,11 @@ Java_org_uelordi_deepsamples_dlib_JniManager_process(JNIEnv *env, jclass type, j
     /*
      * make Processing
      */
-//    mCameraMutex.lock();
-        colorMat.copyTo(shared_camera_image);
-        process();
-//    mCameraMutex.unlock();
+    mCameraMutex.lock();
+    colorMat.copyTo(shared_camera_image);
+    m_isNewFrameSet = true;
+    mCameraCondition.notify_all();
+    mCameraMutex.unlock();
     /*
      * check the fps:
      */
@@ -63,7 +65,7 @@ Java_org_uelordi_deepsamples_dlib_JniManager_start(JNIEnv *env, jclass type) {
     fpsCounter = new Fps();
     fpsCounter->start();
     mIsTheThreadStart = true;
-//    workerThread = new std::thread(process);
+    workerThread = new std::thread(process);
 }
 
 JNIEXPORT void JNICALL
@@ -75,9 +77,14 @@ Java_org_uelordi_deepsamples_dlib_JniManager_stop(JNIEnv *env, jclass type) {
 }
 void process(void) {
     cv::Mat processingImage;
+
     while(mIsTheThreadStart) {
 //        mCameraMutex.
-//        mCameraCondition.wait(mCameraMutex);
+        std::unique_lock<std::mutex> lock(mCameraMutex);
+        while (!m_isNewFrameSet && mIsTheThreadStart) {
+            mCameraCondition.wait(lock);
+        }
+
         cv::cvtColor(shared_camera_image, processingImage, CV_BGRA2RGB);
         std::vector<cv::Rect> faces;
         m_net->process(processingImage, &faces);
