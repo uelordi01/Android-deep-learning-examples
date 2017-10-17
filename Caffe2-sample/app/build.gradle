@@ -14,16 +14,17 @@ android {
             cmake {
                 arguments "-DOpenCV_DIR=" + getOpenCVDir().toString()+"/sdk/native/jni",
                         "-Dcaffe2_DIR=" + getCaffe2Dir() .toString(),
-                        "-Ddlib_DIR=" +getDlibDir().toString()+"/dlib",
-                        "-DANDROID_STL=c++_shared",
+//                        "-Ddlib_DIR=" +getDlibDir().toString()+"/dlib",
+
                         "-DANDROID_NATIVE_API_LEVEL=21",
                         "-DDLIB_ENABLE_ASSERTS=ON",
                         "-DDLIB_NO_GUI_SUPPORT=ON",
                         "-DDLIB_JPEG_SUPPORT=OFF",
                         "-DDLIB_PNG_SUPPORT=OFF",
+                        "-DANDROID_ARM_NEON=TRUE",
                         "-DDLIB_LINK_WITH_SQLITE3=OFF"
-//                "-DANDROID_ARM_NEON=TRUE"
-                cppFlags "-std=C++11"
+//
+                cppFlags "-std=c++11"
                 abiFilters  'armeabi-v7a'
             }
         }

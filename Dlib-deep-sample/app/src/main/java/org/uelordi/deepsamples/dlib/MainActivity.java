@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements org.opencv.androi
         JniManager.init(neuralFilePath, "foo");
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.camera_surface);
         mOpenCvCameraView.setVisibility(CameraBridgeViewBase.VISIBLE);
-        mOpenCvCameraView.setMaxFrameSize(640, 480);
+        mOpenCvCameraView.setMaxFrameSize(320, 240);
         mOpenCvCameraView.setCvCameraViewListener(this);
     }
 

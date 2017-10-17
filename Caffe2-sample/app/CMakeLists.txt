@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.4.1)
 SET(OpenCV_FOUND true )
 FIND_PACKAGE(OpenCV REQUIRED)
 SET(PROTOBUF_PROTOC_EXECUTABLE ${caffe2_DIR}/build_host_protoc/bin/protoc)
-ADD_SUBDIRECTORY(${dlib_DIR} ${CMAKE_CURRENT_BINARY_DIR}/dlib)
+#ADD_SUBDIRECTORY(${dlib_DIR} ${CMAKE_CURRENT_BINARY_DIR}/dlib)
 
 add_library( # Sets the name of the library.
              native-lib
@@ -97,9 +97,10 @@ target_link_libraries(
                        -Wl,--no-whole-archive
                        NNPACK
                        thread_pool
-                       dlib
+                     #  dlib
                        glog
                        protobuf
                        cpufeatures
+                       ${OpenCV_LIBS}
                        ${log-lib}
                        ${android-lib})

@@ -1,25 +1,29 @@
 #include "native-lib.h"
 #include "fps.h"
-#include <dlib/dnn.h>
-#include <dlib/gui_widgets.h>
-#include <dlib/clustering.h>
-#include <dlib/string.h>
-#include <dlib/image_io.h>
-#include <dlib/image_processing/frontal_face_detector.h>
-#define CAFFE2_USE_LITE_PROTO 1
+//#include <dlib/dnn.h>
+//#include <dlib/gui_widgets.h>
+//#include <dlib/clustering.h>
+//#include <dlib/string.h>
+//#include <dlib/image_io.h>
+//#include <dlib/image_processing/frontal_face_detector.h>
+//#define CAFFE2_USE_LITE_PROTO 1
 #include <caffe2/core/predictor.h>
 #include <caffe2/core/operator.h>
 #include <caffe2/core/timer.h>
 #include "caffe2/core/init.h"
 
-
 #include "opencv2/core.hpp"
+#include "opencv2/imgproc.hpp"
+
+
 #define IMG_H 227
 #define IMG_W 227
 #define IMG_C 3
 #define MAX_DATA_SIZE IMG_H * IMG_W * IMG_C
 #define alog(...) __android_log_print(ANDROID_LOG_ERROR, "F8DEMO", __VA_ARGS__);
 #define PROTOBUF_USE_DLLS 1
+
+bool infer_HWC = false;
 //#define min(a,b) ((a) > (b)) ? (b) : (a)
 //#define max(a,b) ((a) > (b)) ? (a) : (b)
 
@@ -54,32 +58,62 @@ Java_org_uelordi_deepsamples_caffe2_JniManager_process(JNIEnv *env, jclass type,
 
 //    // TODO
     cv::Mat  &inMat =*(cv::Mat *) colorImage;
-//    int h = inMat.rows;
-//    int w = inMat.cols;
-//    auto h_offset = max(0, (h - IMG_H) / 2);
-//    auto w_offset = max(0, (w - IMG_W) / 2);
+    int h = inMat.rows;
+    int w = inMat.cols;
+    cv::Mat process_image;
+    auto h_offset = max(0, (h - IMG_H) / 2);
+    auto w_offset = max(0, (w - IMG_W) / 2);
+    cv::resize(inMat, process_image, cv::Size(IMG_H, IMG_W));
+
 //
-//    auto iter_h = IMG_H;
-//    auto iter_w = IMG_W;
-//    if (h < IMG_H) {
-//        iter_h = h;
-//    }
-//    if (w < IMG_W) {
-//        iter_w = w;
-//    }
+    auto iter_h = IMG_H;
+    auto iter_w = IMG_W;
+    if (h < IMG_H) {
+        iter_h = h;
+    }
+    if (w < IMG_W) {
+        iter_w = w;
+    }
     caffe2::TensorCPU input;
-//    if (infer_HWC) {
-//        input.Resize(std::vector<int>({IMG_H, IMG_W, IMG_C}));
-//    } else {
-//        input.Resize(std::vector<int>({1, IMG_C, IMG_H, IMG_W}));
-//    }
-//    memcpy(input.mutable_data<float>(), input_data, IMG_H * IMG_W * IMG_C * sizeof(float));
-//    caffe2::Predictor::TensorVector input_vec{&input};
-//    caffe2::Predictor::TensorVector output_vec;
-//    caffe2::Timer t;
-//    t.Start();
-//    _predictor->run(input_vec, &output_vec);
-//    float fps = 1000/t.MilliSeconds();
+    if (infer_HWC) {
+        input.Resize(std::vector<int>({IMG_H, IMG_W, IMG_C}));
+    } else {
+        input.Resize(std::vector<int>({1, IMG_C, IMG_H, IMG_W}));
+    }
+
+    memcpy(input.mutable_data<float>(), process_image.data, IMG_H * IMG_W * IMG_C * sizeof(float));
+    caffe2::Predictor::TensorVector input_vec{&input};
+    caffe2::Predictor::TensorVector output_vec;
+    caffe2::Timer t;
+    t.Start();
+    _predictor->run(input_vec, &output_vec);
+    float fps = 1000/t.MilliSeconds();
+
+    constexpr int k = 5;
+    float max[k] = {0};
+    int max_index[k] = {0};
+    int capacity = output_vec.capacity();
+    // Find the top-k results manually.
+    if ( capacity > 0) {
+        for (auto output : output_vec) {
+            int output_size =  output->size();
+            for (auto i = 0; i < output_size; ++i) {
+                for (auto j = 0; j < k; ++j) {
+                    if (output->template data<float>()[i] > max[j]) {
+                        for (auto _j = k - 1; _j > j; --_j) {
+                            max[_j - 1] = max[_j];
+                            max_index[_j - 1] = max_index[_j];
+                        }
+                        max[j] = output->template data<float>()[i];
+                        max_index[j] = i;
+                        goto skip;
+                    }
+                }
+                skip:;
+            }
+        }
+    }
+
 //    total_fps += fps;
 //    avg_fps = total_fps / iters_fps;
 //    total_fps -= avg_fps;
