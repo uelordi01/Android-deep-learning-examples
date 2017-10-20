@@ -11,7 +11,6 @@ public class JniManager {
     static String ext="";
 
     static String[] libraryList_withPrefix = {
-//            "opencv_java3",
             "glog",
             "gnustl_shared",
             "native-lib"
