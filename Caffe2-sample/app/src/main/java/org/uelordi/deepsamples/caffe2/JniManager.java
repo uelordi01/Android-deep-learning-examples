@@ -32,7 +32,6 @@ public class JniManager {
 
     }
     public static native void init(AssetManager mgr);
-    public static native void process(long colorImage, long greyImage);
     public static native void start();
     public static native void stop();
     public static native String processYUVFrame(int h, int w, byte[] Y, byte[] U, byte[] V,

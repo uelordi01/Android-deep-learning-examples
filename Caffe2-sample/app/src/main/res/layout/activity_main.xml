@@ -5,17 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.uelordi.deepsamples.caffe2.MainActivity">
-
-    <org.opencv.android.JavaCameraView
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:camera_id="front"
-        app:show_fps="true"
-        android:visibility="gone"
-        android:id="@+id/camera_surface"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="0dp" />
+    tools:context="org.uelordi.deepsamples.caffe2.ClassifyCamera">
 
 
     <TextureView
@@ -40,5 +30,18 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_change_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_menu_camera"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintRight_toRightOf="parent" />
+
 
 </android.support.constraint.ConstraintLayout>

@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Size;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +71,8 @@ public class ClassifyCamera extends AppCompatActivity {
     private boolean processing = false;
     private Image image = null;
     private boolean run_HWC = false;
+    FloatingActionButton mChangeTheCamera;
+    int mcamera_id;
 
 
     static {
@@ -93,50 +96,65 @@ public class ClassifyCamera extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
+        setContentView(R.layout.activity_main);
+        mcamera_id = 0;
         mgr = getResources().getAssets();
-
         new SetUpNeuralNetwork().execute();
 
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_FULLSCREEN;
         decorView.setSystemUiVisibility(uiOptions);
 
-        setContentView(R.layout.activity_main);
 
+        mChangeTheCamera = (FloatingActionButton) findViewById(R.id.fab_change_camera);
+        mChangeTheCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mcamera_id == 0) {
+                    mcamera_id = 1;
+                } else {
+                    mcamera_id = 0;
+                }
+                stopBackgroundThread();
+                closeCamera();
+                startBackgroundThread();
+                openCamera(mcamera_id);
+            }
+        });
         textureView = (TextureView) findViewById(R.id.caffe2_camera_view);
         textureView.setSystemUiVisibility(SYSTEM_UI_FLAG_IMMERSIVE);
-        final GestureDetector gestureDetector = new GestureDetector(this.getApplicationContext(),
-                new GestureDetector.SimpleOnGestureListener(){
-            @Override
-            public boolean onDoubleTap(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public void onLongPress(MotionEvent e) {
-                super.onLongPress(e);
-
-            }
-
-            @Override
-            public boolean onDoubleTapEvent(MotionEvent e) {
-                return true;
-            }
-
-            @Override
-            public boolean onDown(MotionEvent e) {
-                return true;
-            }
-        });
-
-        textureView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return gestureDetector.onTouchEvent(event);
-            }
-        });
+//        final GestureDetector gestureDetector = new GestureDetector(this.getApplicationContext(),
+//                new GestureDetector.SimpleOnGestureListener(){
+//            @Override
+//            public boolean onDoubleTap(MotionEvent e) {
+//                return true;
+//            }
+//
+//            @Override
+//            public void onLongPress(MotionEvent e) {
+//                super.onLongPress(e);
+//
+//            }
+//
+//            @Override
+//            public boolean onDoubleTapEvent(MotionEvent e) {
+//                return true;
+//            }
+//
+//            @Override
+//            public boolean onDown(MotionEvent e) {
+//                return true;
+//            }
+//        });
+//
+//        textureView.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                return gestureDetector.onTouchEvent(event);
+//            }
+//        });
 
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -148,7 +166,7 @@ public class ClassifyCamera extends AppCompatActivity {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open your camera here
-            openCamera();
+            openCamera(mcamera_id);
         }
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -269,10 +287,14 @@ public class ClassifyCamera extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private void openCamera() {
+    private void openCamera(int cameraNum) {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         try {
-            cameraId = manager.getCameraIdList()[0];
+//            check if the device has one or mor cameras
+            if(manager.getCameraIdList().length <= 1) {
+                cameraNum = 0;
+            }
+            cameraId = manager.getCameraIdList()[cameraNum];
             CameraCharacteristics characteristics = manager.getCameraCharacteristics(cameraId);
             StreamConfigurationMap map = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
             assert map != null;
@@ -319,7 +341,7 @@ public class ClassifyCamera extends AppCompatActivity {
         super.onResume();
         startBackgroundThread();
         if (textureView.isAvailable()) {
-            openCamera();
+            openCamera(mcamera_id);
         } else {
             textureView.setSurfaceTextureListener(textureListener);
         }
