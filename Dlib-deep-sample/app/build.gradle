@@ -1,7 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
-
+    signingConfigs {
+        config {
+            keyAlias 'Testing key'
+            keyPassword 'Vicomtech1'
+            storeFile file('/home/VICOMTECH/uelordi/proyectos/SwitchTrackingEngine/kanvas_tracker/kt/apps/androidApp/keystores/TestingKeyStore.jks')
+            storePassword 'Vicomtech1'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "26.0.0"
     defaultConfig {
@@ -37,7 +44,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-
+            signingConfig signingConfigs.config
         }
     }
     externalNativeBuild {

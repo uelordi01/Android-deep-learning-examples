@@ -11,7 +11,7 @@ public class JniManager {
     static String ext="";
 
     static String[] libraryList_withPrefix = {
-            "opencv_java3",
+//            "opencv_java3",
             "glog",
             "gnustl_shared",
             "native-lib"
@@ -35,5 +35,7 @@ public class JniManager {
     public static native void process(long colorImage, long greyImage);
     public static native void start();
     public static native void stop();
+    public static native String processYUVFrame(int h, int w, byte[] Y, byte[] U, byte[] V,
+                                                  int rowStride, int pixelStride, boolean r_hwc);
 
 }
